@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="md-layout" @submit.prevent="preventFunc" >
+    <form class="md-layout" @submit.prevent="preventFunc">
       <md-card class="md-layout-item md-size-100 md-small-size-100">
         <md-card-content>
           <div class="md-layout md-gutter">
@@ -12,14 +12,10 @@
                   id="title"
                   autocomplete="given-name"
                   v-model="form.title"
-                  :disabled="sending"
+                  required
                 />
-                <span class="md-error" v-if="!$v.form.title.required"
-                  >The title is required</span
-                >
-                <span class="md-error" v-else-if="!$v.form.title.minlength"
-                  >Invalid title</span
-                >
+                <span>{{error.message}}</span>
+               
               </md-field>
               <div>
                 <md-chips v-model="form.tegs" md-placeholder="Task tegs...">
@@ -63,12 +59,15 @@ export default {
     form: {
       title: null,
       description: null,
-      tegs: ["test1", "test2"],
+      tegs: [],
       selectedDate: new Date(),
     },
     userSaved: false,
     sending: false,
     lastUser: null,
+    error: {
+      message: null
+    }
   }),
   validations: {
     form: {
@@ -92,20 +91,24 @@ export default {
       }
     },
     submitHandler(e) {
-      const task = {
-        title: this.form.title,
-        date: this.form.selectedDate,
-        tegs: this.form.tegs,
-        description: this.form.description,
-        status: "active",
-        id: Date.now(),
-      };
-      this.$store.dispatch("createTask", task);
-      this.$router.push("/list");
-      this.clearForm();
+      if (this.form.title) {
+        const task = {
+          title: this.form.title,
+          date: this.form.selectedDate,
+          tegs: this.form.tegs,
+          description: this.form.description,
+          status: "active",
+          id: Date.now(),
+        };
+        this.$store.dispatch("createTask", task);
+        this.$router.push("/list");
+        this.clearForm();
+      }else {
+       this.error.message = "Field is required"
+      }
     },
-    preventFunc(){
-      return 
+    preventFunc() {
+      return;
     },
     clearForm() {
       this.$v.$reset();
@@ -127,5 +130,15 @@ export default {
 .btn {
   display: flex;
   justify-content: flex-end;
+}
+.btn span {
+  padding: 10px 20px;
+  border-radius: 2px;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #458aff;
 }
 </style>

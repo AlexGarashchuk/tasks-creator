@@ -1,6 +1,6 @@
 <template>
   <md-toolbar class="md-accent md-primary" md-elevation="1">
-    <h3 class="md-title" style="flex: 1">Title</h3>
+    <h3 class="md-title" style="flex: 1">Tasks creator</h3>
     <router-link to="/"> <md-button>Create</md-button></router-link>
     <router-link to="/task/:id" exact>
       <md-button class="md-primary">Task</md-button>
